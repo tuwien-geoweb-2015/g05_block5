@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Suchbare Karte</title>
+	<link rel="stylesheet" href="http://openlayers.org/en/v3.11.0/css/ol.css" type="text/css">
+	<script src="http://openlayers.org/en/v3.11.0/build/ol.js"></script>
+
+	</head>
+	<body>
+		<form id"searchform">
+			<input name="search" size="80" type="text" placeholder="search, e.g. 'Vienna', 'Karlsplatz 13, Wien'" />
+			<input type="submit" value="search" />
+		</form>
+	    <div id="map" class="map"></div>
+		<script>
+	var map = new ol.Map({
+	  layers: [
+	    new ol.layer.Tile({
+	      source: new ol.source.OSM()
+	    })
+	  ],
+	  controls: ol.control.defaults({
+	    attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+	      collapsible: false
+	    })
+	  }),
+	  target: 'map',
+	  view: new ol.View({
+	    center: [0, 0], /** könnte durch den nachfolgend Code zur bstimmung der Position des Betrachters weggelassen werden */
+	    zoom: 12
+	  })
+	});
+
+	var geolocation = new ol.Geolocation({						/** mit diesen zwei Absätzen zoom ich die Karte zum Standort des Benutzers hin */
+	  projection: map.getView().getProjection(),
+	  tracking: true
+	});
+	geolocation.once('change:position', function(evt) {
+		  map.getView().setCenter(geolocation.getPosition());
+	});
+
+	var form = document.getElementById('searchform');
+	form.onsubmit = function(evt) {
+		evt.preventDefault();
+		var q = form.search.value;	/** Koordinaten unseres Searchfeldes sind die Werte für unsere Suche auf Nominatim */
+		var url = 'http://nominatim.openstreetmap.org/search?format=json&q=' + q; /** +q werden die Werte von der Searcheingabe übermittel */
+		var xhr = new XMLHttpRequest();			/** über diesen Request forder ich die Ergebnisurl von Nominatin an */
+		xhr.open('GET', url);
+		xhr.unload = function() {
+			var result = JSON.parse(xhr.responseText); /** wandel die URL in ein JSON um */
+			if(result.length > 0) {		/** Wenn ein Ergbenis da ist wird das erste genommen */
+				var first = result[0];
+				form.search.value = first.display_name;
+				map.getView().setCenter(ol.proj.fromLonLat([			/** Karte werden die Koordinaten-Ergebnisse (Longitude und Latitude) angezeigt */
+					parseFloat(first.lon, 10),											/** Die Koordinatioen müssen auch wieder in JSON übersetzt werden */
+					parseFloat(first.lat, 10)
+				]))
+			}
+		};
+		xhr.sen();		/** immer am Schluss, zuerst den unload schreiben */
+	};
+
+	</script>
+</body>
+
+</html>
