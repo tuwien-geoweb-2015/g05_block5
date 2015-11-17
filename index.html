@@ -43,9 +43,9 @@
 	var form = document.getElementById('searchform');
 	form.onsubmit = function(evt) {
 		evt.preventDefault();
-		var q = form.search.value;	/** Koordinaten unseres Searchfeldes sind die Werte für unsere Suche auf Nominatim */
-		var url = 'http://nominatim.openstreetmap.org/search?format=json&q=' + q; /** +q werden die Werte von der Searcheingabe übermittel */
-		var xhr = new XMLHttpRequest();			/** über diesen Request forder ich die Ergebnisurl von Nominatin an */
+		var q = form.search.value;				/** Koordinaten unseres Searchfeldes sind die Werte für unsere Suche auf Nominatim */
+		var url = 'http://nominatim.openstreetmap.org/search?format=json&q=' + q; 		/** +q werden die Werte von der Searcheingabe übermittel */
+		var xhr = new XMLHttpRequest();					/** über diesen Request forder ich die Ergebnisurl von Nominatin an */
 		xhr.open('GET', url);
 		xhr.unload = function() {
 			var result = JSON.parse(xhr.responseText); /** wandel die URL in ein JSON um */
@@ -58,7 +58,7 @@
 				]))
 			}
 		};
-		xhr.sen();		/** immer am Schluss, zuerst den unload schreiben */
+		xhr.send();		/** immer am Schluss, zuerst den unload schreiben */
 	};
 
 	</script>
