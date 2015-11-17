@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Simple example</title>
+<link rel="stylesheet" href="http://openlayers.org/en/v3.11.0/css/ol.css" type="text/css">
+<script src="http://openlayers.org/en/v3.11.0/build/ol.js"></script>
+<script src="http://openlayers.org/api/OpenLayers.js"></script>
+<script type="text/javascript">
+
+        function init(){
+            map = new ol.Map('map');            
+            baseLayer = new OpenLayers.Layer.WMS("OpenLayers VMAP0", "http://labs.metacarta.com/wms/vmap0", {layers:"basic"});
+            }
+ 
+        function jumpTo()
+        {   map.addLayer(baseLayer);
+            map.setCenter(new OpenLayers.LonLat(-98, 39),3);
+            markers = new OpenLayers.Layer.Markers("Cities");   			
+            map.addLayer(markers);
+            
+            markers.clearMarkers();        	
+            var selectBox = document.getElementById('jumpTo');        		
+   	    if (selectBox.value == "NA") return;
+   	    var parse = selectBox.value.split(',');
+   	    var location = new OpenLayers.LonLat(parse[0],parse[1]); 			
+   	    var size = new OpenLayers.Size(21,25);
+            var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+            var icon = new OpenLayers.Icon('http://d75822.medialib.glogster.com/media/b9/b9eff4a579e67a6df03b5e1b2fd611873b0df320ee45488b98dcfa56d58af5c6/358px-angryredbird-1-png.png',size,offset);   
+            markers.addMarker(new OpenLayers.Marker(location,icon.clone()));               			 
+          }
+    </script>
+    <style>
+    @media screen
+    {
+        #map{width: 1000px; height:300px; border: 2px solid black;}
+    }
+    </style>
+</head>
+<body onload="init()">
+<select id="jumpTo" onchange="jumpTo();">
+    <option value="NA">=== Select a City ===</option>
+    <option value="-84.42,33.65">Atlanta</option>
+    <option value="-104.87,39.75">Denver</option>  
+    <option value="-95.35,29.97">Houston</option>
+    <option value="-81.32,28.43">Orlando</option> 
+    <option value="-121.50,38.52">Sacramento</option>
+    <option value="-95.62,39.07">Topeka</option> 
+</select>
+     <div id="map" class="map"></div>
+</body>
+</html>
