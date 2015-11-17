@@ -9,8 +9,8 @@
 	</head>
 	<body>
 		<form id"searchform">
-			<input name="search" size="80" type="text" placeholder="search, e.g. 'Vienna', 'Karlsplatz 13, Wien'" />
-			<input type="submit" value="search" />
+			<input name="search" size="80" type="text" placeholder="Search, e.g. 'Vienna', 'Karlsplatz 13, Wien'" />
+			<input type="submit" value="Search" />
 		</form>
 	    <div id="map" class="map"></div>
 		<script>
@@ -55,7 +55,7 @@
 				map.getView().setCenter(ol.proj.fromLonLat([			/** Karte werden die Koordinaten-Ergebnisse (Longitude und Latitude) angezeigt */
 					parseFloat(first.lon, 10),											/** Die Koordinatioen müssen auch wieder in JSON übersetzt werden */
 					parseFloat(first.lat, 10)
-				]))
+				]));
 			}
 		};
 		xhr.send();		/** immer am Schluss, zuerst den unload schreiben */
