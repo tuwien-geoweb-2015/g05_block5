@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Simple example</title>
+<title>Exercise</title>
 <link rel="stylesheet" href="http://openlayers.org/en/v3.11.0/css/ol.css" type="text/css">
 <script src="http://openlayers.org/en/v3.11.0/build/ol.js"></script>
 
@@ -10,7 +10,7 @@
 <form id="searchform">
      <input name="search" size="100" type="text" placeholder="Search, e.g. 'Vienna', 'Karlsplatz 13, Wien'">
      <input type="submit" value="Search">
-     </form> 
+     </form>
      <div id="map" class="map"></div>
 <script>
 var map = new ol.Map({
@@ -37,6 +37,7 @@ var geolocation = new ol.Geolocation({
 geolocation.once('change:position', function(evt) {
   map.getView().setCenter(geolocation.getPosition());
 });
+
 var form = document.getElementById('searchform');
 form.onsubmit = function(evt) {
   evt.preventDefault();
@@ -57,6 +58,15 @@ form.onsubmit = function(evt) {
   };
   xhr.send();
 };
+
+var markers = new OpenLayers.Layer.Markers( "Markers" );
+map.addLayer(markers);
+
+var size = new OpenLayers.Size(21,25);
+var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+var icon = new OpenLayers.Icon(frosch.png, size, offset);
+
+markers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(geolocation),icon));
 
 </script>
 </body>

@@ -49,7 +49,7 @@
 		xhr.open('GET', url);
 		xhr.unload = function() {
 			var result = JSON.parse(xhr.responseText); /** wandel die URL in ein JSON um */
-			if (result.length > 0) {		/** Wenn ein Ergbenis da ist wird das erste genommen */
+			if(result.length > 0) {		/** Wenn ein Ergbenis da ist wird das erste genommen */
 				var first = result[0];
 				form.search.value = first.display_name;
 				map.getView().setCenter(ol.proj.fromLonLat([			/** Karte werden die Koordinaten-Ergebnisse (Longitude und Latitude) angezeigt */

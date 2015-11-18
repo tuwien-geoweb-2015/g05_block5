@@ -3,6 +3,12 @@
 <head>
 <title>Exercise</title>
 <link rel="stylesheet" href="http://openlayers.org/en/v3.11.0/css/ol.css" type="text/css">
+<style>
+    .map {
+      height: 400px;
+      width: 100%;
+    }
+  </style>
 <script src="http://openlayers.org/en/v3.11.0/build/ol.js"></script>
 
 </head>
@@ -12,7 +18,67 @@
      <input type="submit" value="Search">
      </form>
      <div id="map" class="map"></div>
+     <label class="checkbox" for="track">
+       <input id="track" type="checkbox"/>Mein Standort
+     </label>
 <script>
+/**var iconFeature = new ol.Feature({
+  geometry: new ol.geom.Point([0,0]),
+  name: 'Letzte Position'
+});
+
+var iconStyle = new ol.style.Style({ ({
+    anchor: [0.5, 46],
+    anchorXUnits: 'fraction',
+    anchorYUnits: 'pixels',
+    opacity: 0.75,
+    url: 'https://github.com/tuwien-geoweb-2015/g05_block5/frosch.png'
+  }))
+});
+var vectorLayer = new ol.layer.Vector({
+  title: 'Marker'
+  source: vectorSource
+});
+
+var element = document.getElementById('popup');
+
+var popup = new ol.Overlay({
+  element: element,
+  positioning: 'bottom-center',
+  stopEvent: false
+});
+map.addOverlay(popup);
+
+// display popup on click
+map.on('click', function(evt) {
+  var feature = map.forEachFeatureAtPixel(evt.pixel,
+      function(feature, layer) {
+        return feature;
+      });
+  if (feature) {
+    popup.setPosition(evt.coordinate);
+    $(element).popover({
+      'placement': 'top',
+      'html': true,
+      'content': feature.get('name')
+    });
+    $(element).popover('show');
+  } else {
+    $(element).popover('destroy');
+  }
+});
+
+// change mouse cursor when over marker
+map.on('pointermove', function(e) {
+  if (e.dragging) {
+    $(element).popover('destroy');
+    return;
+  }
+  var pixel = map.getEventPixel(e.originalEvent);
+  var hit = map.hasFeatureAtPixel(pixel);
+  map.getTarget().style.cursor = hit ? 'pointer' : '';
+}); */
+
 var map = new ol.Map({
   layers: [
     new ol.layer.Tile({
@@ -37,6 +103,13 @@ var geolocation = new ol.Geolocation({
 geolocation.once('change:position', function(evt) {
   map.getView().setCenter(geolocation.getPosition());
 });
+function el(id) {
+  return document.getElementById(id);
+}
+
+el('track').addEventListener('change', function() {
+  geolocation.setTracking(this.checked);
+});
 
 var form = document.getElementById('searchform');
 form.onsubmit = function(evt) {
@@ -59,14 +132,37 @@ form.onsubmit = function(evt) {
   xhr.send();
 };
 
-var markers = new OpenLayers.Layer.Markers( "Markers" );
-map.addLayer(markers);
+var accuracyFeature = new ol.Feature();
+geolocation.on('change:accuracyGeometry', function() {
+  accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
+});
 
-var size = new OpenLayers.Size(21,25);
-var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-var icon = new OpenLayers.Icon(frosch.png, size, offset);
+var positionFeature = new ol.Feature();
+positionFeature.setStyle(new ol.style.Style({
+  image: new ol.style.Circle({
+    radius: 6,
+    fill: new ol.style.Fill({
+      color: '#3399CC'
+    }),
+    stroke: new ol.style.Stroke({
+      color: '#fff',
+      width: 2
+    })
+  })
+}));
 
-markers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(geolocation),icon));
+geolocation.on('change:position', function() {
+  var coordinates = geolocation.getPosition();
+  positionFeature.setGeometry(coordinates ?
+      new ol.geom.Point(coordinates) : null);
+});
+
+var featuresOverlay = new ol.layer.Vector({
+  map: map,
+  source: new ol.source.Vector({
+    features: [accuracyFeature, positionFeature]
+  })
+});
 
 </script>
 </body>
