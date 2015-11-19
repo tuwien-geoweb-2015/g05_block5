@@ -9,11 +9,8 @@
 <body>
 <form id="searchform">
      <input name="search" size="100" type="text" placeholder="Search, e.g. 'Vienna', 'Karlsplatz 13, Wien'">
-	 	<input type="submit" value="Search">
-     </form>
-	 <form id="button">
-	<input name="locate-me" type="button" value="Standort" onclick="Javascipt:current_location()">
-	</form>
+	   <input name="locate-me" type="button" value="Search" onclick="Javascipt:current_location()">
+</form>
      <div id="map" class="map"></div>
 <script>
 var marker = new ol.Feature();
@@ -69,9 +66,8 @@ xhr.open("GET", url, true);
         parseFloat(first.lon),
         parseFloat(first.lat)
       ]));
-	  marker.setGeometry(new ol.geom.Point(map.getView().getCenter()));
-	map.getView().fitExtent(ol.proj.transformExtent(extent, 'EPSG:4326', 'EPSG:3857'), map.getSize());
 
+	marker.setGeometry(new ol.geom.Point(map.getView().getCenter()));
     }
   };
 xhr.send();
