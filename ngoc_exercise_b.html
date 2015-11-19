@@ -52,6 +52,8 @@
     geolocation.setTracking(false);
     map.getView().setCenter(geolocation.getPosition());
     marker.setGeometry(new ol.geom.Point(map.getView().getCenter()));
+    /*vectorSources = new ol.geom.Geometry();
+    map.getView().fit(vectorSources.getExtent(), map.getSize());*/
     });
 
     var form = document.getElementById("searchform");
@@ -72,14 +74,14 @@
           ]));
         marker.setGeometry(new ol.geom.Point(map.getView().getCenter()));
     	  /*map.getView().getZoomforExtent(bounds, closest);*/
-        var ex = result[0];
+        /*var ex = result[0];
         vectorSources = new ol.geom.Geometry();
         map.getView().fit(vectorSources.getExtent([
           parseInt(ex.minx),
           parseInt(ex.miny),
           parseInt(ex.maxx),
           parseInt(ex.maxy)
-          ]), map.getSize());
+        ]), map.getSize());*/
         }
       };
     xhr.send();
